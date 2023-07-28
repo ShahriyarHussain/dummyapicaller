@@ -1,8 +1,7 @@
-package com.caller.dummyapicaller.Service;
+package com.testmaster.dummyapicaller.Service;
 
-import com.caller.dummyapicaller.Exception.BadRequestException;
-import com.caller.dummyapicaller.Exception.UnhandledErrorException;
-import org.json.JSONArray;
+import com.testmaster.dummyapicaller.Exception.BadRequestException;
+import com.testmaster.dummyapicaller.Exception.UnhandledErrorException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ import java.util.Map;
 @Service
 public class ApiResponseService {
 
-    private static final int LENGTH_OF_JSON_EXTENSION = 5;
+//    private final Logger LOGGER = LoggerFactory.getLogger(ApiResponseService.class);
     @Value("${response_folder_name}")
     private String responseSourceDirectory;
 
@@ -31,7 +30,6 @@ public class ApiResponseService {
             Path path = getFilePath(name);
             String jsonContent = new String(Files.readAllBytes(path));
             JSONObject object = new JSONObject(jsonContent);
-            System.out.println(object.toString(2));
             return object.toMap();
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,7 +101,8 @@ public class ApiResponseService {
         Files.delete(path);
     }
 
-    private static List<String> getFileNamesFromDirectoryStream(DirectoryStream<Path> stream) {
+    private List<String> getFileNamesFromDirectoryStream(DirectoryStream<Path> stream) {
+        final int LENGTH_OF_JSON_EXTENSION = 5;
         List<String> fileNamesList = new LinkedList<>();
         for (Path file : stream) {
             if (Files.isRegularFile(file)) {

@@ -1,7 +1,6 @@
-package com.caller.dummyapicaller.Exception;
+package com.testmaster.dummyapicaller.Exception;
 
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @NoArgsConstructor
 public class UnhandledErrorException extends RuntimeException {

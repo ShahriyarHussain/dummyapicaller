@@ -1,11 +1,9 @@
-package com.caller.dummyapicaller.Controller;
+package com.testmaster.dummyapicaller.Controller;
 
-import com.caller.dummyapicaller.Exception.BadRequestException;
-import com.caller.dummyapicaller.Exception.UnhandledErrorException;
-import com.caller.dummyapicaller.Service.ApiResponseService;
+import com.testmaster.dummyapicaller.Exception.BadRequestException;
+import com.testmaster.dummyapicaller.Exception.UnhandledErrorException;
+import com.testmaster.dummyapicaller.Service.ApiResponseService;
 import lombok.RequiredArgsConstructor;
-import org.atmosphere.config.service.Post;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +18,18 @@ import java.util.Map;
 @RequestMapping("/api")
 public class ApiResponseController {
 
+//    private final Logger LOGGER = LoggerFactory.getLogger(ApiResponseService.class);
     private final ApiResponseService apiResponseService;
 
-    @PostMapping(value = "/getInstantResponse")
-    public Map<String, Object> getInstantApiResponse(@RequestBody Map<String, Object> objectMap) {
+    //For api clients only (i.e. Postman)
+    @PostMapping(value = "/get-api-response")
+    public Map<String, Object> getApiResponse(@RequestBody Map<String, Object> objectMap) {
         return objectMap;
     }
 
-    @PostMapping("/save_response/{dataName}")
-    public ResponseEntity<String> getAndSaveInstantApiResponse(@PathVariable String dataName,
-                                                       @RequestBody Map<String, Object> objectMap) {
+    @PostMapping("/save-api-response/{dataName}")
+    public ResponseEntity<String> saveApiResponse(@PathVariable String dataName,
+                                                               @RequestBody Map<String, Object> objectMap) {
         JSONObject jsonObject = new JSONObject(objectMap);
         try {
             return ResponseEntity.ok(apiResponseService.saveJsonResponse(dataName, jsonObject));
@@ -40,7 +40,7 @@ public class ApiResponseController {
         }
     }
 
-    @GetMapping("/get_response_by_name/{dataName}")
+    @GetMapping("/get-response-by-name/{dataName}")
     public ResponseEntity<Map<String, Object>> getApiResponseByName(@PathVariable String dataName) {
         try {
             return ResponseEntity.ok(apiResponseService.getApiResponseByName(dataName));
@@ -51,7 +51,7 @@ public class ApiResponseController {
         }
     }
 
-    @GetMapping("/show_saved_api_list")
+    @GetMapping("/show-saved-api-list")
     public ResponseEntity<List<String>> showSavedApiList() {
         try {
             return ResponseEntity.ok(apiResponseService.getListOfSavedResponses());
@@ -60,9 +60,9 @@ public class ApiResponseController {
         }
     }
 
-    @PostMapping("/replace_with_new_response/{dataName}")
+    @PostMapping("/replace-saved-response/{dataName}")
     public ResponseEntity<String> overwriteResponse(@PathVariable String dataName,
-                                  @RequestBody Map<String, Object> objectMap) {
+                                                    @RequestBody Map<String, Object> objectMap) {
         JSONObject jsonObject = new JSONObject(objectMap);
         try {
             return ResponseEntity.ok(apiResponseService.overwriteFileContentByName(dataName, jsonObject));
@@ -73,7 +73,7 @@ public class ApiResponseController {
         }
     }
 
-    @DeleteMapping("/delete_response/{dataName}")
+    @DeleteMapping("/delete-response/{dataName}")
     public ResponseEntity<String> deleteResponseByName(@PathVariable String dataName) {
         try {
             return ResponseEntity.ok(apiResponseService.deleteFileByName(dataName));
@@ -84,7 +84,7 @@ public class ApiResponseController {
         }
     }
 
-    @DeleteMapping("/delete_all_responses")
+    @DeleteMapping("/delete-all-responses")
     public ResponseEntity<String> AllResponses() {
         try {
             return ResponseEntity.ok(apiResponseService.deleteAll());
@@ -95,3 +95,4 @@ public class ApiResponseController {
         }
     }
 }
+
