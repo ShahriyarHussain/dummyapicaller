@@ -1,5 +1,6 @@
 package com.testmaster.dummyapicaller.Service;
 
+import com.testmaster.dummyapicaller.Dao.ApiResponseDao;
 import com.testmaster.dummyapicaller.Exception.BadRequestException;
 import com.testmaster.dummyapicaller.Exception.UnhandledErrorException;
 import org.json.JSONObject;
@@ -19,8 +20,25 @@ import java.util.Map;
 public class ApiResponseService {
 
 //    private final Logger LOGGER = LoggerFactory.getLogger(ApiResponseService.class);
-    @Value("${response_folder_name}")
+    @Value("${response.folder.name}")
     private String responseSourceDirectory;
+    @Value("${base.url}")
+    private String baseUrl;
+    @Value("${server.port}")
+    private String serverPort;
+
+    private final String COLON = ":";
+    private final String SLASH_API_SLASH = "/api/";
+
+    public List<ApiResponseDao> getSavedResponsesAsDao() {
+        List<ApiResponseDao> daoList = new LinkedList<>();
+        for (String apiName: getListOfSavedResponses()) {
+            String url = baseUrl + COLON + serverPort + SLASH_API_SLASH + apiName;
+            daoList.add(new ApiResponseDao(apiName, url, "GET"));
+        }
+        return daoList;
+    }
+
 
     public Map<String, Object> getApiResponseByName(String name) {
         if (!fileNameAlreadyExists(name)) {

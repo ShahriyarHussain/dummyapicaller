@@ -27,8 +27,10 @@ public class SaveView extends VerticalLayout {
         H4 title = new H4("Save A Response");
         TextField apiNameField = new TextField("API Name:");
         TextArea jsonResponseText = getTextArea();
-        Button replaceButton = new Button("Replace");
+        Button replaceButton = new Button("Save/Replace");
+        replaceButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         Button button = new Button("Save");
+        button.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SMALL);
         button.addClickListener(e -> {
             try {
                 apiResponseService.saveJsonResponse(apiNameField.getValue(), new JSONObject(jsonResponseText.getValue()));
@@ -68,10 +70,11 @@ public class SaveView extends VerticalLayout {
         textArea.setLabel("Enter A Valid Json Response");
         textArea.setValueChangeMode(ValueChangeMode.EAGER);
         textArea.addValueChangeListener(e -> e.getSource().setHelperText(e.getValue().length() + " characters"));
-        textArea.setWidth("60%");
+        textArea.setWidth("70%");
         textArea.setHeight(30, Unit.EM);
         textArea.setMaxWidth("90%");
-        textArea.setMaxHeight(50, Unit.EM);
+        textArea.setMaxHeight(70, Unit.EM);
+        textArea.getStyle().set("font-family", "monospace").set("font-size", "9pt");
         return textArea;
     }
 

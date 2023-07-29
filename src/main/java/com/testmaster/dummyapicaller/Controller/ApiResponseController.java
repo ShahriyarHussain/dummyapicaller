@@ -40,7 +40,7 @@ public class ApiResponseController {
         }
     }
 
-    @GetMapping("/get-response-by-name/{dataName}")
+    @GetMapping("/{dataName}")
     public ResponseEntity<Map<String, Object>> getApiResponseByName(@PathVariable String dataName) {
         try {
             return ResponseEntity.ok(apiResponseService.getApiResponseByName(dataName));

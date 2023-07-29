@@ -50,7 +50,7 @@ public class MainView extends AppLayout {
     private Tabs getTabs() {
         Tabs tabs = new Tabs();
         tabs.add(createTab(VaadinIcon.DOWNLOAD, "Save API Response", Views.SAVE_API),
-                createTab(VaadinIcon.LIST, "Show Saved Responses", Views.SHOW_API));
+                createTab(VaadinIcon.LIST, "Show Saved Responses", Views.SHOW_RESPONSE_LIST));
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         return tabs;
     }
@@ -69,7 +69,7 @@ public class MainView extends AppLayout {
             case SAVE_API:
                 link.setRoute(SaveView.class);
                 break;
-            case SHOW_API:
+            case SHOW_RESPONSE_LIST:
                 link.setRoute(ShowDataView.class);
                 break;
             default:

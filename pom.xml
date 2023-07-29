@@ -6,7 +6,7 @@
     <groupId>com.lazoft</groupId>
     <artifactId>testmasters</artifactId>
     <name>Dummy API Caller</name>
-    <version>0.0.1-alpha</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
