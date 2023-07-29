@@ -67,9 +67,7 @@ public class SaveView extends VerticalLayout {
         TextArea textArea = new TextArea();
         textArea.setLabel("Enter A Valid Json Response");
         textArea.setValueChangeMode(ValueChangeMode.EAGER);
-        textArea.addValueChangeListener(e -> {
-            e.getSource().setHelperText(e.getValue().length() + " characters");
-        });
+        textArea.addValueChangeListener(e -> e.getSource().setHelperText(e.getValue().length() + " characters"));
         textArea.setWidth("60%");
         textArea.setHeight(30, Unit.EM);
         textArea.setMaxWidth("90%");
