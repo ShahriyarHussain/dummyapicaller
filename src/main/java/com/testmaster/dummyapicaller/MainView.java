@@ -5,7 +5,8 @@ import com.testmaster.dummyapicaller.View.SaveView;
 import com.testmaster.dummyapicaller.View.ShowDataView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -26,18 +27,20 @@ import com.vaadin.flow.router.RouterLink;
  * The main view contains a text field for getting the username and a button
  * that shows a greeting message in a notification.
  */
+
 @Route("")
-//@CssImport("./styles/shared-styles.css")
-//@CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = Lumo.DARK)
+@CssImport("./styles/shared-styles.css")
+@CssImport(value = "./styles/vaadin-text-field-styles.css")
 public class MainView extends AppLayout {
 
     public MainView() {
+        createDrawer();
+    }
+
+    public void createDrawer() {
         DrawerToggle toggle = new DrawerToggle();
 
-        H1 title = new H1("Dummy API Caller");
-        title.getStyle().set("font-size", "var(--lumo-font-size-l)")
-                .set("margin", "0");
-
+        H3 title = new H3("Dummy API Caller");
         Tabs tabs = getTabs();
 
         addToDrawer(tabs);

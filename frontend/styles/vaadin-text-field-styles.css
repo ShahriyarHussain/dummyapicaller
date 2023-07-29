@@ -9,3 +9,7 @@
     box-shadow: inset 0 0 0 1px var(--lumo-contrast-30pct);
     background-color: var(--lumo-base-color);
 }
+
+textarea.v-textarea {
+    font-family: monospace;
+}

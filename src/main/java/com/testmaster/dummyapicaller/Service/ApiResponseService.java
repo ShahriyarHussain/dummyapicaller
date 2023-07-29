@@ -55,7 +55,7 @@ public class ApiResponseService {
     public String overwriteFileContentByName(String name, JSONObject jsonObject) {
         try {
             Path path = getFilePath(name);
-            writeBytesToFile(path, jsonObject.toString().getBytes());
+            writeBytesToFile(path, jsonObject.toString(2).getBytes());
             return "";
         } catch (Exception e) {
             e.printStackTrace();
