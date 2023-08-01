@@ -8,7 +8,17 @@ Must have **Java version 11 or above** installed. For a minimal JRE to run the a
 
 ## Running The App:
 
-Download the zip file from Releases section and extract it. you will find a `.jar` file here. Open terminal/Command Line and type 
+Download the jar file from Releases section. Create a folder named 'saved-responses' in the same directory as the jar to save responses. Folder structures is as follows:
+
+```
+dummy-api-2.0.0.jar
+saved-responses
+  |_GET
+  |_POST
+  |_DELETE
+  |_PUT
+```
+Open terminal/Command Line where the jar is and type.
 
 ```java -jar dummy-api-2.0.0.jar```
 
