@@ -4,13 +4,15 @@ Save APIs through a frontend and call them from your server side application/api
 
 ## Requirements:
 
-Must have Java version 11 or above installed. For a minimal JRE to run the app you can Download Eclipse Temurin JRE from [here.](https://adoptium.net/temurin/releases/?version=11)
+Must have **Java version 11 or above** installed. For a minimal JRE to run the app you can Download **Eclipse Temurin JRE** from *[here.](https://adoptium.net/temurin/releases/?version=11)*
 
 ## Running The App:
 
-Download the .zip file from Releases section and extract it. you will find a .jar file here. Open terminal/Command Line and type 
+Download the zip file from Releases section and extract it. you will find a `.jar` file here. Open terminal/Command Line and type 
+
 ```java -jar dummy-api-2.0.0.jar```
-The app should start. Go to [localhost:8080](localhost:8080) in your browser and you should see the App running.
+
+The app should start. Go to *localhost:8080* in your browser and you should see the App running.
 
 ## Properties
 
@@ -30,9 +32,5 @@ server.error.include-stacktrace=never
 ```
 
 Email [me](mailto:ad1whqv2q@mozmail.com) for any issues.
-
-
-Email me at ad1whqv2q@mozmail.com for any issues that you are facing.
-
 
 #### N.B. While developing the application, it is recommended to launch the `Application` class in debug mode from your IDE.
