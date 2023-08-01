@@ -1,9 +1,12 @@
 package com.testmaster.dummyapicaller.Service;
 
 import com.testmaster.dummyapicaller.Dao.ApiResponseDao;
+import com.testmaster.dummyapicaller.Enum.RequestTypes;
 import com.testmaster.dummyapicaller.Exception.BadRequestException;
 import com.testmaster.dummyapicaller.Exception.UnhandledErrorException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +22,7 @@ import java.util.Map;
 @Service
 public class ApiResponseService {
 
-//    private final Logger LOGGER = LoggerFactory.getLogger(ApiResponseService.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(ApiResponseService.class);
     @Value("${response.folder.name}")
     private String responseSourceDirectory;
     @Value("${base.url}")
@@ -27,96 +30,108 @@ public class ApiResponseService {
     @Value("${server.port}")
     private String serverPort;
 
-    private final String COLON = ":";
-    private final String SLASH_API_SLASH = "/api/";
 
-    public List<ApiResponseDao> getSavedResponsesAsDao() {
-        List<ApiResponseDao> daoList = new LinkedList<>();
-        for (String apiName: getListOfSavedResponses()) {
-            String url = baseUrl + COLON + serverPort + SLASH_API_SLASH + apiName;
-            daoList.add(new ApiResponseDao(apiName, url, "GET"));
-        }
-        return daoList;
-    }
+    private final String SLASH = "/";
+    private final String ERROR_MESSAGE_STRING = "[!!ERROR!!] ";
 
-
-    public Map<String, Object> getApiResponseByName(String name) {
-        if (!fileNameAlreadyExists(name)) {
+    public Map<String, Object> getApiResponseByName(String name, RequestTypes type) {
+        if (!fileNameAlreadyExists(name, type)) {
             throw new BadRequestException("No such data with provided name exists");
         }
         try {
-            Path path = getFilePath(name);
+            Path path = getFilePath(name, type);
             String jsonContent = new String(Files.readAllBytes(path));
             JSONObject object = new JSONObject(jsonContent);
             return object.toMap();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(ERROR_MESSAGE_STRING + e.getMessage());
             throw new UnhandledErrorException("Error: " + e.getClass().getSimpleName() + " ---> " + e.getMessage());
         }
     }
 
-    public String saveJsonResponse(String name, JSONObject jsonObject) {
-        if (fileNameAlreadyExists(name)) {
+    public void saveJsonResponse(String name, JSONObject jsonObject, RequestTypes type) {
+        if (fileNameAlreadyExists(name, type)) {
             throw new BadRequestException("File With Similar Name Already Exists");
         }
         try {
-            Path path = getFilePath(name);
+            Path path = getFilePath(name, type);
             createFileByPath(path);
             writeBytesToFile(path, jsonObject.toString(2).getBytes());
-            return "Saved!";
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(ERROR_MESSAGE_STRING + e.getMessage());
             throw new UnhandledErrorException("Error: " + e.getClass().getSimpleName() + " ---> " + e.getMessage());
         }
     }
 
-    public String overwriteFileContentByName(String name, JSONObject jsonObject) {
+    public void overwriteFileContentByName(String name, JSONObject jsonObject, RequestTypes type) {
         try {
-            Path path = getFilePath(name);
+            Path path = getFilePath(name, type);
             writeBytesToFile(path, jsonObject.toString(2).getBytes());
-            return "";
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(ERROR_MESSAGE_STRING + e.getMessage());
             throw new UnhandledErrorException("Error: " + e.getClass().getSimpleName() + " ---> " + e.getMessage());
         }
     }
 
-    public List<String> getListOfSavedResponses() {
-        Path path = Paths.get(responseSourceDirectory + "/");
+    public List<ApiResponseDao> getAllSavedResponsesAsDaoList() {
+        String SLASH_API_SLASH = "/api/", COLON = ":";
+        List<ApiResponseDao> daoList = new LinkedList<>();
+        for (RequestTypes type : RequestTypes.values()) {
+            for (String apiName: getSavedResponsesByRequestType(type)) {
+                String url = baseUrl + COLON + serverPort + SLASH_API_SLASH + apiName;
+                daoList.add(new ApiResponseDao(apiName, url, type));
+            }
+        }
+        return daoList;
+    }
+
+    public List<String> getSavedResponsesByRequestType(RequestTypes type) {
+        Path path = Paths.get(responseSourceDirectory + SLASH + type.toString() + SLASH);
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
             return getFileNamesFromDirectoryStream(stream);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(ERROR_MESSAGE_STRING + e.getMessage());
             throw new UnhandledErrorException("Error: " + e.getClass().getSimpleName() + " ---> " + e.getMessage());
         }
     }
+    public void deleteAllResponses() {
+        for (RequestTypes type : RequestTypes.values()) {
+            deleteAllByType(type);
+        }
+    }
 
-    public String deleteFileByName(String name) {
+    public void deleteFileByNameAndRequestType(String name, RequestTypes type) {
         try {
-            deleteFile(name);
-            return "Deleted!";
+            deleteFile(name, type);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(ERROR_MESSAGE_STRING + e.getMessage());
             throw new UnhandledErrorException("Error: " + e.getClass().getSimpleName() + " ---> " + e.getMessage());
         }
     }
 
-    public String deleteAll() {
+    private void deleteAllByType(RequestTypes type) {
         try {
-            List<String> listOfAvailableFiles = getListOfSavedResponses();
-            for (String fileName : listOfAvailableFiles) {
-                deleteFile(fileName);
+            for (String fileName : getSavedResponsesByRequestType(type)) {
+                deleteFile(fileName, type);
             }
-            return "All Deleted!";
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(ERROR_MESSAGE_STRING + e.getMessage());
             throw new UnhandledErrorException("Error: " + e.getClass().getSimpleName() + " ---> " + e.getMessage());
         }
     }
 
-    private void deleteFile(String name) throws IOException {
-        Path path = getFilePath(name);
+    private void deleteFile(String name, RequestTypes type) throws IOException {
+        Path path = getFilePath(name, type);
         Files.delete(path);
+    }
+
+    private boolean fileNameAlreadyExists(String name, RequestTypes type) {
+        return Files.exists(getFilePath(name, type));
+    }
+
+    private Path getFilePath(String name, RequestTypes type) {
+        String JSON_FILE_EXTENSION = ".json";
+        return Paths.get(responseSourceDirectory + SLASH + type.toString() + SLASH + name + JSON_FILE_EXTENSION);
     }
 
     private List<String> getFileNamesFromDirectoryStream(DirectoryStream<Path> stream) {
@@ -131,10 +146,6 @@ public class ApiResponseService {
         return fileNamesList;
     }
 
-    private Path getFilePath(String name) {
-        return Paths.get(responseSourceDirectory + "/" + name + ".json");
-    }
-
     private void createFileByPath(Path path) throws IOException {
         Files.createFile(path);
     }
@@ -143,7 +154,5 @@ public class ApiResponseService {
         Files.write(path, bytes);
     }
 
-    private boolean fileNameAlreadyExists(String name) {
-        return Files.exists(getFilePath(name));
-    }
+
 }

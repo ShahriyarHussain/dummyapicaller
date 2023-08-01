@@ -21,4 +21,4 @@ drivers/
 error-screenshots/
 webpack.generated.js
 
-/dummyJsonResponses
+/saved-responses
