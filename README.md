@@ -1,41 +1,38 @@
 # Dummy API Caller
 
-Save APIs through a frontend and call them from your server side application.
+Save APIs through a frontend and call them from your server side application/apiclient.
 
-## Compatibility
+## Requirements:
 
-Currently the application is compatible with Java 11 or above. There for JRE 11 or above must be installed in order to run the jar in local machine.
+Must have Java version 11 or above installed. For a minimal JRE to run the app you can Download Eclipse Temurin JRE from [here.](https://adoptium.net/temurin/releases/?version=11)
 
-## Running the JAR
+## Running The App:
 
-Download the jar from release section. Open Terminal/Cmd and run:
-```java -jar dummy-api-caller.jar```
-The application should start on `localhost:15070`.
+Download the .zip file from Releases section and extract it. you will find a .jar file here. Open terminal/Command Line and type 
+```java -jar dummy-api-2.0.0.jar```
+The app should start. Go to [localhost:8080](localhost:8080) in your browser and you should see the App running.
 
-### Changing properties and accessing saved files
+## Properties
 
-Just running the jar would use the properties inside the jar and would also save file in the jar. 
+You can find the following properties in the `application.properties` file. 
 
-To change the properties, create an `application.properties` file in the same directory as the jar. The mandatory propreties for the file are below:
 ```
-response.folder.name = dummyJsonResponses
+\# Misc
+logging.level.org.atmosphere = warn 
+spring.mustache.check-template-location = false
+
+\# You can change these to your liking
+server.port=${PORT:8080} 
+response.folder.name = saved-responses
 base.url = localhost
-```
-You can also add the following properties to choose the port where the application is running and the logging in the console.
-```
-server.port=${PORT:15070} 
-logging.level.org.atmosphere = warn
-```
-Create a folder in the same directory as the jar file. The folder and the property `response.folder.name` in properties file must be kept same.
+server.error.include-stacktrace=never
 
-Now the run the jar file like before and you should see your responses in the folder.
+```
+
+Email [me](mailto:ad1whqv2q@mozmail.com) for any issues.
 
 
 Email me at ad1whqv2q@mozmail.com for any issues that you are facing.
 
 
-## Running the Application In Your IDE
-
-While developing the application, it is recommended to launch the `Application` class in debug mode from your IDE.
-
-After the application has started, you can view your it at http://localhost:8080/ in your browser.
+#### N.B. While developing the application, it is recommended to launch the `Application` class in debug mode from your IDE.
