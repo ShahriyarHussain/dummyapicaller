@@ -1,7 +1,6 @@
 package com.testmaster.dummyapicaller.View;
 
 import com.testmaster.dummyapicaller.Enum.RequestTypes;
-import com.testmaster.dummyapicaller.Enum.StatusTypes;
 import com.testmaster.dummyapicaller.Exception.BadRequestException;
 import com.testmaster.dummyapicaller.MainView;
 import com.testmaster.dummyapicaller.Service.ApiResponseService;
@@ -29,16 +28,16 @@ public class SaveView extends VerticalLayout {
 
     public SaveView(@Autowired ApiResponseService apiResponseService) {
         H4 title = new H4("Save A Response");
-        TextField apiNameField = new TextField("API Name:");
-        apiNameField.setAutofocus(true);
-        TextArea jsonResponseText = getTextArea();
-        Button replaceButton = getReplaceButton();
-        Button saveButton = getSaveButton();
-        HorizontalLayout layout = new HorizontalLayout();
 
+        TextField apiNameField = getApiNameField();
         Select<RequestTypes> requestTypesSelector = getRequestTypesSelector();
-        Select<StatusTypes> statusSelector = getStatusSelector();
-        layout.add(requestTypesSelector, statusSelector);
+        //        Select<StatusTypes> statusSelector = getStatusSelector();
+        HorizontalLayout layout = getHLayoutAndAddItems(apiNameField, requestTypesSelector);
+
+        Button saveButton = getSaveButton();
+        Button replaceButton = getReplaceButton();
+
+        TextArea jsonResponseText = getTextArea();
 
         saveButton.addClickListener(e -> {
             try {
@@ -63,16 +62,28 @@ public class SaveView extends VerticalLayout {
             }
         });
 
-        add(title, apiNameField, layout, saveButton, jsonResponseText);
+        add(title, layout, saveButton, jsonResponseText);
     }
 
-    private Select<StatusTypes> getStatusSelector() {
-        Select<StatusTypes> statusSelector = new Select<>();
-        statusSelector.setItems(StatusTypes.values());
-        statusSelector.setLabel("Status");
-        statusSelector.setWidth(20, Unit.EM);
-        return statusSelector;
+    private static HorizontalLayout getHLayoutAndAddItems(TextField apiNameField, Select<RequestTypes> requestTypesSelector) {
+        HorizontalLayout layout = new HorizontalLayout();
+        layout.add(apiNameField, requestTypesSelector);
+        return layout;
     }
+
+    private TextField getApiNameField() {
+        TextField apiNameField = new TextField("API Name:");
+        apiNameField.setAutofocus(true);
+        return apiNameField;
+    }
+
+//    private Select<StatusTypes> getStatusSelector() {
+//        Select<StatusTypes> statusSelector = new Select<>();
+//        statusSelector.setItems(StatusTypes.values());
+//        statusSelector.setLabel("Status");
+//        statusSelector.setWidth(20, Unit.EM);
+//        return statusSelector;
+//    }
 
     private Select<RequestTypes> getRequestTypesSelector() {
         Select<RequestTypes> requestTypesSelector = new Select<>();
