@@ -8,7 +8,9 @@ Currently the application is compatible with Java 11 or above. There for JRE 11 
 
 ## Running the JAR
 
-Download the jar from release section. Open Terminal/Cmd and run `java -jar dummy-api-caller.jar`. The application should start on `localhost:15070`.
+Download the jar from release section. Open Terminal/Cmd and run:
+```java -jar dummy-api-caller.jar```
+The application should start on `localhost:15070`.
 
 ### Changing properties and accessing saved files
 
