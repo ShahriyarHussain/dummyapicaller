@@ -3,6 +3,7 @@ package com.testmaster.dummyapicaller;
 import com.testmaster.dummyapicaller.Enum.Views;
 import com.testmaster.dummyapicaller.View.SaveView;
 import com.testmaster.dummyapicaller.View.ShowDataView;
+import com.testmaster.dummyapicaller.View.ThemeView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -50,7 +51,8 @@ public class MainView extends AppLayout {
     private Tabs getTabs() {
         Tabs tabs = new Tabs();
         tabs.add(createTab(VaadinIcon.DOWNLOAD, "Save API Response", Views.SAVE_API),
-                createTab(VaadinIcon.LIST, "Show Saved Responses", Views.SHOW_RESPONSE_LIST));
+                createTab(VaadinIcon.LIST, "Show Saved Responses", Views.SHOW_RESPONSE_LIST),
+                createTab(VaadinIcon.GAVEL, "Settings", Views.SETTINGS));
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         return tabs;
     }
@@ -71,6 +73,9 @@ public class MainView extends AppLayout {
                 break;
             case SHOW_RESPONSE_LIST:
                 link.setRoute(ShowDataView.class);
+                break;
+            case SETTINGS:
+                link.setRoute(ThemeView.class);
                 break;
             default:
                 break;

@@ -6,6 +6,7 @@ import com.testmaster.dummyapicaller.Service.ApiResponseService;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.icon.Icon;
@@ -13,6 +14,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.component.textfield.TextAreaVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.json.JSONObject;
@@ -65,12 +67,15 @@ public class ShowDataView extends VerticalLayout {
     }
 
     private Button getDeleteAllButton(ApiResponseService apiResponseService, Grid<ApiResponseDao> grid) {
-        Button deleteAllButton = new Button("Delete All", e -> {
+        ConfirmDialog dialog = getDialogBox();
+        dialog.addConfirmListener(e -> {
             apiResponseService.deleteAllResponses();
-            Notification.show("Deleted All Responses!", 2500, Notification.Position.TOP_CENTER);
+            Notification.show("Deleted All Responses!", 2000, Notification.Position.TOP_CENTER);
             grid.setItems(apiResponseService.getAllSavedResponsesAsDaoList());
             grid.getColumnByKey("CounterCol").setFooter("Number of response(s): " + 0);
         });
+
+        Button deleteAllButton = new Button("Delete All", e -> dialog.open());
         deleteAllButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
         return deleteAllButton;
     }
@@ -98,7 +103,21 @@ public class ShowDataView extends VerticalLayout {
         textArea.setMaxWidth("95%");
         textArea.setMaxHeight(70, Unit.EM);
         textArea.getStyle().set("font-family", "'Fira Code', Consolas, monospace").set("font-size", "10pt");
+        textArea.addThemeVariants(TextAreaVariant.MATERIAL_ALWAYS_FLOAT_LABEL,TextAreaVariant.LUMO_HELPER_ABOVE_FIELD);
         return textArea;
+    }
+
+    private ConfirmDialog getDialogBox() {
+        ConfirmDialog dialog = new ConfirmDialog();
+        dialog.setHeader("Delete All Records ?");
+        dialog.setText("This will delete all records permanently. Are you sure you want to delete all?");
+
+        dialog.setCancelable(true);
+        dialog.setCancelText("Cancel");
+
+        dialog.setConfirmText("Delete All");
+        dialog.setConfirmButtonTheme("error primary");
+        return dialog;
     }
 
 }
